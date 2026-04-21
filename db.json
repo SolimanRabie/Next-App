@@ -1,0 +1,20 @@
+{
+  "products": [
+    {
+      "id": "1",
+      "title": "Essence Mascara Lash Princess",
+      "price": 9.99,
+      "category": "beauty",
+      "thumbnail": "https://cdn.dummyjson.com/product-images/beauty/essence-mascara-lash-princess/thumbnail.webp"
+    },
+    {
+      "title": "te",
+      "price": 234,
+      "category": "beauty",
+      "description": "e",
+      "thumbnail": "https://cdn.dummyjson.com/product-images/beauty/essence-mascara-lash-princess/thumbnail.webp",
+      "id": "Vgrd_ExTKLs"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
