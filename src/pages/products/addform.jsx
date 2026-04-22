@@ -16,13 +16,12 @@ const AddProduct = () => {
     e.preventDefault();
 
     try {
-      const res = await fetch("http://localhost:4000/products", {
+      const res = await fetch("/api/products", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...formData,
           price: Number(formData.price),
-          id: Date.now().toString(),
         }),
       });
 

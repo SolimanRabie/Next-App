@@ -13,11 +13,11 @@ const ProductsComponent = ({ products }) => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
-        const res = await fetch(`http://localhost:4000/products/${id}`, {
+        const res = await fetch(`/api/products/${id}`, {
           method: "DELETE",
         });
         if (res.ok) {
-          setItems(items.filter((item) => item.id !== id));
+          setItems(items.filter((item) => item._id !== id));
         }
       } catch (error) {
         console.error("Delete failed:", error);
@@ -26,7 +26,7 @@ const ProductsComponent = ({ products }) => {
   };
 
   const handleFilter = async (category) => {
-    let url = "http://localhost:4000/products";
+    let url = "/api/products";
     if (category !== "all") {
       url += `?category=${category}`;
     }
@@ -87,7 +87,7 @@ const ProductsComponent = ({ products }) => {
         {filteredItems.length > 0 ? (
           filteredItems.map((p, index) => {
             return (
-              <div key={p.id} className="col-md-6 col-lg-4 col-xl-3">
+              <div key={p._id} className="col-md-6 col-lg-4 col-xl-3">
                 <div className="card h-100 shadow-lg border-0 rounded-4 transition-hover bg-light">
                   <div
                     className="position-relative overflow-hidden bg-white rounded-top-4"
@@ -132,14 +132,14 @@ const ProductsComponent = ({ products }) => {
 
                     <div className="d-flex gap-2">
                       <Link
-                        href={`/products/${p.id}`}
+                        href={`/products/${p._id}`}
                         className="btn btn-primary flex-grow-1 fw-bold rounded-pill"
                       >
                         👁️ Details
                       </Link>
 
                       <button
-                        onClick={() => handleDelete(p.id)}
+                        onClick={() => handleDelete(p._id)}
                         className="btn btn-danger rounded-circle"
                         title="Delete Product"
                       >

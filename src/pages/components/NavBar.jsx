@@ -14,6 +14,9 @@ const NavBar = () => {
           <Link className="nav-link text-dark fw-semibold" href="/products">
             Products
           </Link>
+          <Link className="nav-link text-dark fw-semibold" href="/news">
+            📰 News
+          </Link>
           <Link className="nav-link text-dark fw-semibold" href="/contactus">
             Contact Us
           </Link>
