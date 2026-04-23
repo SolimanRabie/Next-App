@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 const ProductsComponent = ({ products }) => {
+  const { data: session } = useSession();
   const [items, setItems] = useState(products || []);
   const [searchQuery, setSearchQuery] = useState("");
+  const [cartMessage, setCartMessage] = useState("");
 
   useEffect(() => {
     setItems(products);
@@ -22,6 +25,35 @@ const ProductsComponent = ({ products }) => {
       } catch (error) {
         console.error("Delete failed:", error);
       }
+    }
+  };
+
+  const handleAddToCart = async (product) => {
+    if (!session) {
+      setCartMessage("Please sign in to add items to cart");
+      setTimeout(() => setCartMessage(""), 3000);
+      return;
+    }
+
+    try {
+      const userId = session.user.email;
+      const res = await fetch(`/api/cart/${userId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          productId: product._id,
+          quantity: 1,
+        }),
+      });
+
+      if (res.ok) {
+        setCartMessage(`✅ ${product.title} added to cart!`);
+        setTimeout(() => setCartMessage(""), 3000);
+      }
+    } catch (error) {
+      console.error("Add to cart failed:", error);
+      setCartMessage("❌ Error adding to cart");
+      setTimeout(() => setCartMessage(""), 3000);
     }
   };
 
@@ -46,6 +78,20 @@ const ProductsComponent = ({ products }) => {
 
   return (
     <div className="container py-5">
+      {cartMessage && (
+        <div
+          className="alert alert-info alert-dismissible fade show mb-4"
+          role="alert"
+        >
+          {cartMessage}
+          <button
+            type="button"
+            className="btn-close"
+            onClick={() => setCartMessage("")}
+          ></button>
+        </div>
+      )}
+
       <div className="row mb-5 align-items-center">
         <div className="col-lg-4">
           <h2 className="fw-bold text-uppercase text-primary border-start border-4 border-primary ps-3 mb-0">
@@ -71,6 +117,7 @@ const ProductsComponent = ({ products }) => {
               <option value="fragrances">Fragrances</option>
               <option value="furniture">Furniture</option>
               <option value="groceries">Groceries</option>
+              <option value="electronics">Electronics</option>
             </select>
 
             <Link
@@ -130,17 +177,24 @@ const ProductsComponent = ({ products }) => {
                       {p.description}
                     </p>
 
-                    <div className="d-flex gap-2">
+                    <div className="d-flex gap-2 flex-wrap">
+                      <button
+                        onClick={() => handleAddToCart(p)}
+                        className="btn btn-success flex-grow-1 fw-bold rounded-pill btn-sm"
+                        title="Add to Cart"
+                      >
+                        🛒 Add
+                      </button>
                       <Link
                         href={`/products/${p._id}`}
-                        className="btn btn-primary flex-grow-1 fw-bold rounded-pill"
+                        className="btn btn-primary flex-grow-1 fw-bold rounded-pill btn-sm"
                       >
-                        👁️ Details
+                        👁️ View
                       </Link>
 
                       <button
                         onClick={() => handleDelete(p._id)}
-                        className="btn btn-danger rounded-circle"
+                        className="btn btn-danger rounded-circle btn-sm"
                         title="Delete Product"
                       >
                         🗑️
